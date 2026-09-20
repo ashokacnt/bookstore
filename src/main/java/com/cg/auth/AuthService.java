@@ -14,4 +14,11 @@ public class AuthService {
         encoder = e;
     }
 
+    @Transactional
+    public AuthDtos.UserResponse register(AuthDtos.RegisterRequest req) {
+        if (repo.existsByUsername(req.username()))
+            throw new ConflictException("Username already exists: " + req.username());
+        User u = repo.save(new User(req.username(), encoder.encode(req.password()), "USER"));
+        return new AuthDtos.UserResponse(u.getId(), u.getUsername(), u.getRole());
+    }
 }
