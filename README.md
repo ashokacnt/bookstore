@@ -105,7 +105,7 @@ bookstore/
 └── src/
     ├── main/
     │   ├── java/
-    │   │   └── com/example/bookstore6/
+    │   │   └── com/cg/
     │   │       ├── auth/
     │   │       ├── book/
     │   │       ├── cart/
@@ -116,7 +116,7 @@ bookstore/
     │       └── application.properties
     └── test/
         └── java/
-            └── com/example/bookstore6/
+            └── com/cg/
 ```
 
 ## Module Responsibilities
