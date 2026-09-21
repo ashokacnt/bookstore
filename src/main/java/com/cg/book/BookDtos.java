@@ -9,7 +9,7 @@ public final class BookDtos {
     }
 
     public record CreateBookRequest(@NotBlank String title, @NotBlank String author, @NotBlank String isbn,
-                                    @NotNull @DecimalMin("0.01") BigDecimal price, @Min(1) int stockQuantity) {
+                                    @NotNull @DecimalMin("0.01") BigDecimal price, @Min(0) int stockQuantity) {
     }
 
     public record BookResponse(Long id, String title, String author, String isbn, BigDecimal price, int stockQuantity,
