@@ -258,6 +258,13 @@ Swagger provides an interactive way to inspect and execute the REST APIs.
 
 For protected APIs, provide valid Basic Authentication credentials.
 
+Actuator is enabled to check the status of the application -
+
+http://localhost:8081/actuator 
+http://localhost:8081/actuator/health 
+http://localhost:8081/actuator/metrics
+
+
 ---
 
 # 10. API Summary
