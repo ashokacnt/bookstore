@@ -1,0 +1,224 @@
+### ================================================================
+### bookstore - HTTP API requests
+### Base URL: http://localhost:8081
+###
+### Development credentials:
+### ADMIN: admin / admin123
+### USER : demo  / password
+###
+### IntelliJ IDEA and VS Code REST Client can execute these requests.
+### ================================================================
+
+### ---------------------------------------------------------------
+### BOOKS - POSITIVE
+### ---------------------------------------------------------------
+
+### Public: list books
+GET http://localhost:8081/api/books
+Accept: application/json
+
+### ---------------------------------------------------------------
+### AUTH - POSITIVE
+### ---------------------------------------------------------------
+
+### Register a normal USER
+POST http://localhost:8081/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "username": "alice",
+  "password": "password123"
+}
+
+### ---------------------------------------------------------------
+### BOOKS - ADMIN POSITIVE
+### ---------------------------------------------------------------
+
+### Add book as ADMIN
+POST http://localhost:8081/api/books
+Authorization: Basic YWRtaW46YWRtaW4xMjM=
+Content-Type: application/json
+Accept: application/json
+X-Request-Id: add-book-admin-001
+
+{
+  "title": "Domain-Driven Design",
+  "author": "Eric Evans",
+  "isbn": "9780321125217",
+  "price": 750.00,
+  "stockQuantity": 12
+}
+
+### ---------------------------------------------------------------
+### CART - POSITIVE
+### ---------------------------------------------------------------
+
+### View demo user's cart
+GET http://localhost:8081/api/cart
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Accept: application/json
+
+### Add book to demo user's cart
+POST http://localhost:8081/api/cart/items
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Content-Type: application/json
+Accept: application/json
+
+{
+  "bookId": 1,
+  "quantity": 2
+}
+
+### Update cart item
+PUT http://localhost:8081/api/cart/items/1
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Content-Type: application/json
+Accept: application/json
+
+{
+  "quantity": 3
+}
+
+### Remove cart item
+DELETE http://localhost:8081/api/cart/items/1
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+
+### ---------------------------------------------------------------
+### ORDER - POSITIVE
+### ---------------------------------------------------------------
+
+### Checkout - Idempotency-Key is mandatory
+POST http://localhost:8081/api/orders
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Idempotency-Key: 9d6d5a1e-1f5e-4d45-8c7b-000000000001
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Repeat the previous checkout with the SAME key.
+### It should return the stored response rather than create a duplicate order.
+POST http://localhost:8081/api/orders
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Idempotency-Key: 9d6d5a1e-1f5e-4d45-8c7b-000000000001
+Content-Type: application/json
+Accept: application/json
+
+{}
+
+### Order history
+GET http://localhost:8081/api/orders
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Accept: application/json
+
+### ---------------------------------------------------------------
+### SECURITY - NEGATIVE
+### ---------------------------------------------------------------
+
+### POST book without authentication -> expected 401
+POST http://localhost:8081/api/books
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Unauthorized Book",
+  "author": "Test Author",
+  "isbn": "9780000000001",
+  "price": 100.00,
+  "stockQuantity": 5
+}
+
+### POST book with USER credentials -> expected 403
+POST http://localhost:8081/api/books
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "User Cannot Add Book",
+  "author": "Test Author",
+  "isbn": "9780000000002",
+  "price": 100.00,
+  "stockQuantity": 5
+}
+
+### GET cart without authentication -> expected 401
+GET http://localhost:8081/api/cart
+Accept: application/json
+
+### ---------------------------------------------------------------
+### VALIDATION - NEGATIVE
+### ---------------------------------------------------------------
+
+### Blank title -> expected 400
+POST http://localhost:8081/api/books
+Authorization: Basic YWRtaW46YWRtaW4xMjM=
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "",
+  "author": "Joshua Bloch",
+  "isbn": "9780000000003",
+  "price": 850.00,
+  "stockQuantity": 20
+}
+
+### Zero price -> expected 400
+POST http://localhost:8081/api/books
+Authorization: Basic YWRtaW46YWRtaW4xMjM=
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Invalid Price",
+  "author": "Test Author",
+  "isbn": "9780000000004",
+  "price": 0,
+  "stockQuantity": 10
+}
+
+### Negative stock -> expected 400
+POST http://localhost:8081/api/books
+Authorization: Basic YWRtaW46YWRtaW4xMjM=
+Content-Type: application/json
+Accept: application/json
+
+{
+  "title": "Invalid Stock",
+  "author": "Test Author",
+  "isbn": "9780000000005",
+  "price": 500.00,
+  "stockQuantity": -1
+}
+
+### Invalid cart quantity -> expected 400
+POST http://localhost:8081/api/cart/items
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Content-Type: application/json
+Accept: application/json
+
+{
+  "bookId": 1,
+  "quantity": 0
+}
+
+### Non-existing book -> expected 404
+POST http://localhost:8081/api/cart/items
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Content-Type: application/json
+Accept: application/json
+
+{
+  "bookId": 999999,
+  "quantity": 1
+}
+
+### Missing Idempotency-Key -> expected 400 contract
+POST http://localhost:8081/api/orders
+Authorization: Basic ZGVtbzpwYXNzd29yZA==
+Content-Type: application/json
+Accept: application/json
+
+{}
