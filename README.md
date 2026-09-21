@@ -198,25 +198,6 @@ http://localhost:8081
 
 The application uses `application.properties`.
 
-Example:
-
-```properties
-server.port=8081
-
-spring.datasource.url=jdbc:h2:mem:bookstore;DB_CLOSE_DELAY=-1;DB_CLOSE_ON_EXIT=FALSE
-spring.datasource.username=sa
-spring.datasource.password=
-
-spring.jpa.hibernate.ddl-auto=create-drop
-
-app.admin.bootstrap-enabled=true
-app.admin.username=admin
-app.admin.password=${BOOKSTORE_ADMIN_PASSWORD:admin123}
-
-logging.level.root=INFO
-logging.file.name=${user.home}/bookstore/logs/bookstore.log
-```
-
 ### Important
 
 The H2 database is in-memory, so data is recreated when the application restarts.
@@ -227,12 +208,6 @@ For production, use a persistent database such as PostgreSQL, MySQL, or Oracle a
 
 ## 7. Default Development Users
 
-The development setup provides:
-
-| Username | Password | Role |
-|---|---|---|
-| demo | password | USER |
-| admin | admin123 | ADMIN |
 
 ### Security behavior
 
@@ -253,15 +228,6 @@ H2 console:
 ```text
 http://localhost:8081/h2-console
 ```
-
-Connection details:
-
-```text
-JDBC URL: jdbc:h2:mem:bookstore
-User Name: sa
-Password:
-```
-
 The H2 console is intended only for development.
 
 Disable it in production.
