@@ -290,7 +290,7 @@ Request body:
 ```json
 {
   "username": "ashok",
-  "password": "password"
+  "password": " "
 }
 ```
 
@@ -723,18 +723,8 @@ Example:
 Example:
 
 ```text
-demo/password -> USER
 POST /api/books -> 403
 ```
-
-Whereas:
-
-```text
-admin/admin123 -> ADMIN
-POST /api/books -> 201
-```
-
----
 
 # 22. HTTP 404 — Not Found
 
@@ -1188,10 +1178,8 @@ server.port=8082
 Check:
 
 1. Admin bootstrap is enabled.
-2. Username is `admin`.
-3. Password is `admin123`, unless overridden by `BOOKSTORE_ADMIN_PASSWORD`.
-4. The Basic Authentication header is being sent.
-5. The application was restarted after configuration changes.
+2. The Basic Authentication header is being sent.
+3. The application was restarted after configuration changes.
 
 ## USER receives 403
 
@@ -1200,7 +1188,6 @@ This is expected when a valid USER calls an ADMIN-only endpoint.
 For example:
 
 ```text
-demo/password
 POST /api/books
 ```
 
